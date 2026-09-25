@@ -69,7 +69,7 @@ double closeBuffer[];
 double openBuffer[];
 double highBuffer[];
 double lowBuffer[];
-double volumeBuffer[];
+long   volumeBuffer[];  // Volume is long type in MQL5
 double atrBuffer[];
 
 //+------------------------------------------------------------------+
@@ -148,7 +148,7 @@ void OnTick()
     double open = openBuffer[0];
     double high = highBuffer[0];
     double low = lowBuffer[0];
-    double volume = volumeBuffer[0];
+    double volume = (double)volumeBuffer[0];  // Cast long to double
     double atr = atrBuffer[0];
 
     // Calculate timeframe scale
@@ -378,7 +378,7 @@ double GetLowest(double &buffer[], int count)
 //+------------------------------------------------------------------+
 //| Build volume profile from accumulation bars                       |
 //+------------------------------------------------------------------+
-void BuildVolumeProfile(int startBar, int endBar, double &lowBuf[], double &highBuf[], double &volBuf[])
+void BuildVolumeProfile(int startBar, int endBar, double &lowBuf[], double &highBuf[], long &volBuf[])
 {
     ArrayFill(profileVolumes, 0, ProfileRows, 0.0);
 
@@ -406,7 +406,7 @@ void BuildVolumeProfile(int startBar, int endBar, double &lowBuf[], double &high
             double barHigh = highBuf[barIdx];
             double barRange = barHigh - barLow;
             double overlap = MathMax(0.0, MathMin(rowHigh, barHigh) - MathMax(rowLow, barLow));
-            double volumeShare = barRange > 0.0 ? volBuf[barIdx] * overlap / barRange : 0.0;
+            double volumeShare = barRange > 0.0 ? (double)volBuf[barIdx] * overlap / barRange : 0.0;
 
             rowVolume += volumeShare;
         }
